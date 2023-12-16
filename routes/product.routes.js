@@ -3,7 +3,7 @@ const productRoutes=express.Router();
 const {addNewProduct,
         getAllProducts,
         getProduct,
-        replaceProduct,
+        
         updateProduct,
         deleteProduct
     }=require('../controller/product.controller');
@@ -12,9 +12,9 @@ const {addNewProduct,
     productRoutes.get('/:id',getProduct);
     productRoutes.post('/',addNewProduct)
     
-    productRoutes.put('/:id',replaceProduct);
+    // productRoutes.put('/:id',replaceProduct);
     
-    productRoutes.patch('/:id',updateProduct);
+    productRoutes.put('/:id',updateProduct);
     
     productRoutes.delete('/:id',deleteProduct);
     

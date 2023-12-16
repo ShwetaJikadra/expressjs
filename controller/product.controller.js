@@ -1,60 +1,109 @@
-const product=require('../public/product.json');
+// const product=require('../public/product.json');
+const Product=require('../model/product.model');
 
-exports.getAllProducts=(req,res)=>{
+exports.addNewProduct=async (req,res)=>{
+    // res.json(product);
+    const {title,description,price,category,brand}=req.body;
+    let product=await Product.findOne({title:title});
+    if(product)
+    {
+        return res.json({message:'product is already Exist'})
+    }
+    else{
+        product=await Product.create({
+            title,description,price,category,brand
+        });
+        product.save();
+        res.json({message:'product is added',product})
+    }
+};
+
+exports.getProduct=async(req,res)=>
+{
+    try{
+    const id= req.params.id;
+    const product=await Product.findById(id);
     res.json(product);
-};
-
-exports.getProduct=(req,res)=>
-{
-    const id= Number(req.params.id);
-    const item=product.find((p)=>p.id === id)
-    console.log(item)
-    if (item) {
-        res.json(item);
-    } 
-    else {
-        res.status(404).json({ message: 'Product not found' });
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
-exports.addNewProduct=(req,res)=>{
-    product.push(req.body);
-    res.json({message:"product is added",product:req.body})
-};
-
-exports.replaceProduct=(req,res)=>
-{
-    const id= Number(req.params.id);
-    const itemIndex=product.findIndex((p)=>p.id === id);
-    product.splice(itemIndex,1,{...req.body,id:id});
-    console.log(itemIndex)
-    if (itemIndex) {
-        res.json(itemIndex);
-    } 
-    else {
-        res.status(404).json({ message: 'Product is replace' });
+exports.getAllProducts=async (req,res)=>{
+    try{
+        let product=await Product.find({isDelete:false});
+        res.json(product)
+    }
+    catch(err)
+    {
+    console.log(err)
+    res.status(500).json({message:'internal server error'})
     }
 };
 
-exports.updateProduct=(req,res)=>
+// exports.replaceProduct=(req,res)=>
+// {
+//     const id= Number(req.params.id);
+//     const itemIndex=Product.findIndex((p)=>p.id === id);
+//     Product.splice(itemIndex,1,{...req.body,id:id});
+//     console.log(itemIndex)
+//     if (itemIndex) {
+//         res.json(itemIndex);
+//     } 
+//     else {
+//         res.status(404).json({ message: 'Product is replace' });
+//     }
+// };
+
+exports.updateProduct=async (req,res)=>
 {
-    const id= Number(req.params.id);
-    const itemIndex=product.find((p)=>p.id === id);
-    let item=product[itemIndex]
-    item=product.splice(itemIndex,1,{...item,...req.body});
-    // console.log(itemIndex)
-    
-        res.status(404).json({ message: 'Product is replace',product:item });
+    try
+    {
+        let id =req.params.id;
+        let product=await Product.findByIdAndUpdate(id);
+        if(!product){
+            return res.json({message:'product not found'});
+        }
+        product=await Product.findOneAndUpdate(
+            {_id:id},
+            {
+                $set:{...req.body}
+            },
+            {
+                new:true
+            }
+        )
+        product.save();
+        res.json({product,message:'product is updated'});
+    }
+    catch(err)
+    {
+    console.log(err)
+    res.status(500).json({message:'internal server error'})
+    }
 
 };
 
-exports.deleteProduct=(req,res)=>
+exports.deleteProduct=async (req,res)=>
 {
-    const id= Number(req.params.id);
-    const itemIndex=product.findIndex((p)=>p.id === id);
-    let item=product[itemIndex]
-    item=product.splice(itemIndex,1);
-    // console.log(itemIndex)
-    
-        res.status(404).json({ message: 'Product is delete',product:item });
+    try
+    {
+        let id =req.params.id;
+        let product=await Product.findById(id);
+        if(!product){
+            return res.json({message:'product not found'});
+        }
+        product=await Product.findByIdAndUpdate(
+           product._id,{isDelete:true},{new:true}
+        )
+       
+        res.json({message:'product is deleted'});
+    }
+    catch(err)
+    {
+    console.log(err)
+    res.status(500).json({message:'internal server error'})
+    }
 
 };
