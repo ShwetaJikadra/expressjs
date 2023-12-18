@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express=require('express');
 const app=express();
 const morgan=require('morgan');
 
 // const bp=require('body-parser');
-const port=1010;
+const port=process.env.PORT;
 // const path=require('path');
 
 
@@ -18,7 +19,7 @@ const mongoose = require('mongoose');
 main().catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/shweta_db');
+  await mongoose.connect(process.env.MONGO_DB_URL);
 
   
 }
@@ -27,6 +28,7 @@ main().then(()=>{console.log('db connected')}).catch((err)=>{console.log("error"
 
 app.use('/product',productRoutes);
 app.use('/user',userRoutes);
+// app.use('/employee',employeeRoutes)
 
 app.listen(port,()=>{
     console.log(`welcome ${port}`);
