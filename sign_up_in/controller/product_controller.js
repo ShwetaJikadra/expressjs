@@ -1,5 +1,7 @@
-// const product=require('../public/product.json');
-const Product=require('../model/product.model');
+const express=require('express');
+const app=express();
+const jwt=require('jsonwebtoken');
+const Product=require('../model/product.model')
 
 exports.addNewProduct=async (req,res)=>{
     // res.json(product);
