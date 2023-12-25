@@ -22,4 +22,4 @@ const orderSchema=mongoose.Schema({
         default:false
     }
 });
-module.exports=mongoose.model('oredrs',orderSchema);
+module.exports=mongoose.model('orders',orderSchema);
