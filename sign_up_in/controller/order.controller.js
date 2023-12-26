@@ -55,11 +55,7 @@ exports.updateOrder=async (req,res)=>{
     return res.status(404).json({ message: 'Order not found' });
   }
 
-  let item = await Cart.findOne({_id:cartItemID,user:req.user._id});
-  if(!item)
-  {
-    return res.status(404).json({ message: 'Invalid item,this item not available in Cart ' });
-  }
+ 
 }
 catch (error) {
   console.error(error);
