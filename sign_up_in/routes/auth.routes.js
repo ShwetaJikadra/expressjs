@@ -5,12 +5,14 @@ const Auth=require('../model/auth.model');
 
 authRoutes.post('/image',upload.array('profileImage'),async (req,res)=>{
     let image=[];
-    if(image)
+    console.log(req.files)
+    if(req.files)
     {
-        for(let i=req.files;i<=req.files.length;i++)
+        for(let i=0;i<req.files.length;i++)
         {
-            image=`${req.files.path}`;
+            image[i]=`${req.files[i].path}`;
         }
+        console.log(image)
     }
     // if(req.files){
     //     req.body.profileImage=`${req.file.path}`;

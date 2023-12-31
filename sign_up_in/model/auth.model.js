@@ -1,3 +1,4 @@
+
 const mongoose=require('mongoose');
 const authSchema=new mongoose.Schema({
     username:{
@@ -17,9 +18,9 @@ const authSchema=new mongoose.Schema({
         type:String,
         
     },
-    profileImage:{
+    profileImage:[{
        type:String
-    }
+    }]
     ,
     isDelete:{
         type:Boolean,
